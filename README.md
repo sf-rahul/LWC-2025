@@ -1,2 +1,2 @@
 # LWC-2025
-New lwc components
+For new reuasble lwc components having features like graphql.
