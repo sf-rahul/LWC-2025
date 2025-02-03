@@ -1,24 +1,52 @@
-import { LightningElement ,wire} from 'lwc';
-
-import {gql,graphql} from 'lighngint/uiGraphQlApi'
+import { LightningElement ,wire} from 'lwc'
+import {gql, graphql} from 'lightning/uiGraphQLApi'
 export default class GraphQl extends LightningElement {
 
-      
-         constructor(){
-            super();
-         }
+    @wire(graphql, {
+        query: gql`
+            query getAccounts {
+                uiapi {
+                    query {
+                        Account(
+                            where: { Name: { ne: null } }
+                            first: 5
+                            orderBy: { Name: { order: ASC } }
+                        ) {
+                            edges {
+                                node {
+                                    Id
+                                    Name {
+                                        value
+                                    }
+                                    Phone {
+                                        value
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        `
+    })
+    graphql({data,errors}){
 
-         @wire(graphql,{
-               query: gql`
-                 query AccountInfo {
-                   Account(Where : { Name : {"Test"}}){
-                      
-                   }
-                 }
+        let accounts = [];
 
-               `
+        if(data){
 
-         })
-         accounts
+            data.uiapi.query.Account.edges.map((edge)=>{
+                accounts.push(edge.node.Name.value)
 
+            })
+
+
+        }
+        console.log(accounts)
+            
+    }
+
+
+   
+   
 }
